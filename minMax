@@ -1,0 +1,206 @@
+//** Required package class namespace */
+package min.max;
+
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+
+
+/*
+ * MinMax - description
+ * 
+ * @author Antonio Nalevaiko
+ * @since Apr 19, 2024
+*/
+public class MinMax
+{
+    
+    static final String TITLE      = "Min/Max";
+    static final Font   FONT       = new Font("Consolas",Font.PLAIN,12);
+    static final Color  BACKGROUND = new Color(238,238,238);
+    static final Color  FOREGROUND = new Color(0,0,0);
+    
+    static final int INDEX = 10;
+    static final int NUMBERS = 1;
+    static int [][] scores = new int [INDEX][NUMBERS];
+    
+    
+    
+    
+    private static void start() {
+        output("Welcome to the " + TITLE);
+    }
+    private static void end() {
+        output("Thank you fo using " + TITLE);
+    }
+     /**
+     * Outputs text in a more visual graphical dialog 
+     * 
+     * @param text the text to display
+     */
+    private static void output(String text) {
+        // Create graphical display area with formatted text to put in dialog
+        JTextArea area = formatArea(text);
+        // Add the display area to the dialog to show the user
+        JOptionPane.showMessageDialog(null,area,TITLE,
+                JOptionPane.PLAIN_MESSAGE);        
+    }
+    
+     /**
+     * Ask the user if they want to play again, in a dialog box
+     * 
+     * @return true (yes, play again), false (no)
+     */
+    private static boolean playAgain() {
+        // Send the yesNo method the play again message
+        return yesNo("Do you want to play again?");
+    }
+    
+    /**
+     * Ask the user a yes and no question, in a confirm dialog box
+     * 
+     * @param text the yes no question to ask in the dialog
+     * @return true (yes), false (no)
+     */
+    private static boolean yesNo(String text) {
+        // Create graphical display area with formatted text to put in dialog
+        JTextArea area = formatArea(text);
+        // Store the user's response in a variable from what they clicked on
+        // when the dialog appears only showing "yes" and "no" buttons for 
+        // the user to choose from  
+        int response = JOptionPane.showConfirmDialog(null,area,TITLE,
+                JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (response == JOptionPane.YES_OPTION) return true;
+        else                                    return false;
+    }
+
+    
+    /**
+     * Sets up a fancy display area for the text to display
+     * 
+     * @param text the string of text to format
+     * @return the formatted text area for display
+     */
+    private static JTextArea formatArea(String text) {
+        // Create a graphics object to display the graphical things
+        JTextArea area = new JTextArea();
+        // Assign the global variable font, colors, and passed text to the area
+        area.setFont(FONT);
+        area.setBackground(BACKGROUND);
+        area.setForeground(FOREGROUND);
+        area.setText(text);
+        return area;
+    }
+    
+        
+    /**
+     * Generate a random number (a double) in a range
+     * 
+     * @param low the lowest double in the range
+     * @param high the highest double in the range
+     * @return random double in the range
+     */
+    private static double random(double low, double high) {
+        return (high - low + 1d) * Math.random() + low;
+    }
+    
+    /**
+     * Generate a random number (an integer) in a range
+     * 
+     * @param low the lowest integer in the range
+     * @param high the highest integer in the range
+     * @return random integer in the range
+     */
+    private static int random(int low, int high) {
+        return (int)(random((double)low, (double)high));
+    }
+    
+   /**
+     * Generates a matrix of random integers in the range between low and high
+     * 
+     * @param low the lowest number in the range
+     * @param high the highest number in the range
+     * @param rows the number of rows (down) to make the matrix 
+     * @param columns the number of columns (across) to make the matrix
+     * @return an array of random integers
+     */
+    private static int[][] random(int low, int high, int rows, int columns) {
+        int[][] matrix = new int[rows][columns];    // Create empty matrix
+        for (int row = 0; row < rows; row++) {                  // Travel rows
+            for (int column = 0; column < columns; column++) {  // and columns
+                matrix[row][column] = random(low, high);        // Assign value
+            }
+        }
+        return matrix;                              // Return completed matrix
+    }
+
+        
+    /**
+     * Main method for the project
+     * 
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        start();
+        do {
+            randomNumbers();
+            int minNum = findMin(scores);
+            int maxNum = findMax(scores);
+            String message = createText();
+            output(message + " \n\n The minimun valor in the array = " + minNum +
+                    "\n\n The maximun valor in the array = " + maxNum);
+                    
+                     
+            
+            
+            
+        } while (playAgain() == true);     
+        end();
+    }
+    private static String createText() {
+        String text = "Here is your random array... \n ";
+        for (int hole = 1; hole <= NUMBERS; hole++) {
+        }
+        for (int index = 0; index < INDEX; index++) {
+            text += "\nIndex " + index  + ": \t";
+            for (int hole = 0; hole < NUMBERS; hole++) {
+                text += scores[index][hole] + "\t"; 
+            }
+        }
+        text += "\n\n";
+        return text;
+    }
+    
+    
+    
+    private static void randomNumbers() {
+        int LOW_NUMBER = 1;
+        int HIGH_NUMBER = 99;
+        scores = random(LOW_NUMBER,HIGH_NUMBER, INDEX, NUMBERS);
+    }
+    
+    public static int findMax(int[][] numbers) {
+        int max = numbers[0][0];
+        for (int i = 1; i < numbers.length; i++) {
+            if (numbers[i][0] > max) {
+                max = numbers[i][0];
+            }
+        }
+        return max;
+    }
+    
+    public static int findMin(int[][] numbers) {
+        int min = numbers[0][0];
+        for (int i = 1; i < numbers.length; i++) {
+            if (numbers[i][0] < min) {
+                min = numbers[i][0];
+            }
+        }
+        return min;
+    }
+
+   
+
+}
