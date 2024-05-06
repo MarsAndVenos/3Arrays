@@ -1,0 +1,186 @@
+package randomindexmatch_;
+
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JOptionPane;
+import java.util.Random;
+import javax.swing.JTextArea;
+
+public class RandomIndexMatch_ {
+
+    static final String TITLE = "Random Index Match";
+    static final Font FONT = new Font("Consolas", Font.PLAIN, 12);
+    static final Color BACKGROUND = new Color(238, 238, 238);
+    static final Color FOREGROUND = new Color(0, 0, 0);
+    static int[] array = new int[0];
+
+    /**
+     * Starts the application and welcomes the user with a dialog
+     */
+    private static void start() {
+        // Display a welcome message using the global title variable
+        output("Welcome to " + TITLE);
+    }
+
+    /**
+     * Ends the application with a dialog and terminates the application
+     */
+    private static void end() {
+        // Display a farewell message using the global title variable, then terminate the application
+        output("Thanks for using " + TITLE);
+        System.exit(0); // Terminate the application
+    }
+
+    /**
+     * Ask the user a yes or no question in a confirmation dialog box
+     *
+     * @param text the question to ask in the dialog
+     * @return true (yes), false (no)
+     */
+    private static boolean yesNo(String text) {
+        // Create a graphical display area with formatted text for the dialog
+        JTextArea area = formatArea(text);
+        // Display the dialog with options for "yes" and "no", and store the user's response
+        int response = JOptionPane.showConfirmDialog(null, area, TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+        return response == JOptionPane.YES_OPTION;
+    }
+
+    /**
+     * Ask the user if they want to play again, in a dialog box
+     *
+     * @return true (yes, play again), false (no)
+     */
+    private static boolean playAgain() {
+        // Prompt the user with a play again message and return their response
+        return yesNo("Do you want to play again?");
+    }
+
+    /**
+     * Outputs text in a graphical dialog box
+     *
+     * @param text the text to display
+     */
+    private static void output(String text) {
+        // Create a graphical display area with formatted text for the dialog
+        JTextArea area = formatArea(text);
+        // Display the dialog with the given text
+        JOptionPane.showMessageDialog(null, area, TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    /**
+     * Sets up a formatted display area for text
+     *
+     * @param text the text to format
+     * @return the formatted text area
+     */
+    private static JTextArea formatArea(String text) {
+        // Create a JTextArea object for displaying formatted text
+        JTextArea area = new JTextArea();
+        // Set font, background color, foreground color, and text for the JTextArea
+        area.setFont(FONT);
+        area.setBackground(BACKGROUND);
+        area.setForeground(FOREGROUND);
+        area.setText(text);
+        return area;
+    }
+
+    /**
+     * Asks the user for a string input in an input dialog box
+     *
+     * @param text the prompt for the input dialog box
+     * @return a valid string
+     */
+    private static String input(String text) {
+        // Create a graphical display area with formatted text for the dialog
+        JTextArea area = formatArea(text);
+        String value;
+        do {
+            // Display an input dialog and store the user's response
+            value = JOptionPane.showInputDialog(null, area, TITLE, JOptionPane.PLAIN_MESSAGE);
+            // If the user cancels or leaves the input empty, prompt again
+        } while (value == null || value.isEmpty());
+        return value; // Return the user's input
+    }
+
+    /**
+     * Asks the user for an integer input in an input dialog box
+     *
+     * @param text the prompt for the input dialog box
+     * @return a valid integer
+     */
+    private static int inputInteger(String text) {
+        String value;
+        do {
+            // Prompt the user for input
+            value = input(text);
+            // Check if the input is a valid integer, if not, prompt again
+        } while (!isInteger(value));
+        // Convert the valid input to an integer and return it
+        return Integer.parseInt(value);
+    }
+
+    /**
+     * Checks if a string represents a valid integer
+     *
+     * @param value the string to check
+     * @return true if the string represents a valid integer, false otherwise
+     */
+    private static boolean isInteger(String value) {
+        // Convert the string to a character array
+        char[] characters = value.toCharArray();
+        // Iterate through each character in the array
+        for (char character : characters) {
+            // Check if the character is not a digit and not a negative sign
+            if (!Character.isDigit(character) && character != '-') {
+                return false; // Return false if the character is not a digit or a negative sign
+            }
+        }
+        return true; // Return true if all characters are digits or a negative sign
+    }
+
+    /**
+     * Fills the array with random numbers and counts the matches with their indices
+     *
+     * @return the count of matches
+     */
+    private static int fillArrayAndCountMatches() {
+        Random random = new Random();
+        int matchCount = 0;
+        for (int i = 0; i < array.length; i++) {
+            int randomNumber = random.nextInt(11) + (i - 5); // Random number between i - 5 and i + 5
+            array[i] = randomNumber;
+            if (randomNumber == i) {
+                matchCount++; // Increment match count if the random number matches the index
+            }
+        }
+        return matchCount;
+    }
+
+    /**
+     * Prints the array elements with their indices
+     *
+     * @return the formatted string representing the array
+     */
+    private static String printArray() {
+        StringBuilder text = new StringBuilder();
+        for (int i = 0; i < array.length; i++) {
+            text.append("\nIndex ").append(i).append("=      ").append(array[i]);
+        }
+        text.append("\n");
+        return text.toString(); // Return the formatted string
+    }
+
+    public static void main(String[] args) {
+        // Loop to restart the game if the user wants to play again
+        do {
+            start(); // Display welcome message
+            int sizeInput = inputInteger("Enter the size of the array to generate:");
+            array = new int[sizeInput]; // Resize the array based on user input
+            int matchCount = fillArrayAndCountMatches(); // Fill array and count matches
+            // Output array information
+            output("The array of size " + sizeInput + ":\n\n" + "Index matches = " + matchCount + "\n" + printArray());
+            // Check if the user wants to play again
+        } while (playAgain()); // Repeat if the user wants to play again
+        end(); // End the program if the user doesn't want to play again
+    }
+}
