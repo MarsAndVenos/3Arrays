@@ -1,0 +1,133 @@
+package randomindexmatch;
+
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+
+public class IndexArray {
+
+    static final String TITLE = "Index Array";
+    static final Font FONT = new Font("Consolas", Font.PLAIN, 12);
+    static final Color BACKGROUND = new Color(238, 238, 238);
+    static final Color FOREGROUND = new Color(0, 0, 0);
+
+    /**
+     * Starts the application and welcomes the user with a dialog
+     */
+    private static void start() {
+        // Display a welcome message using the global title variable
+        output("Welcome to " + TITLE);
+    }
+
+    /**
+     * Ends the application with a dialog and terminates the application
+     */
+    private static void end() {
+        // Display a farewell message using the global title variable, then terminate the application
+        output("Thanks for using " + TITLE);
+        System.exit(0); // Terminate the application
+    }
+
+    /**
+     * Outputs text in a graphical dialog box
+     *
+     * @param text the text to display
+     */
+    private static void output(String text) {
+        // Create a graphical display area with formatted text for the dialog
+        JTextArea area = formatArea(text);
+        // Display the dialog with the given text
+        JOptionPane.showMessageDialog(null, area, TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    /**
+     * Sets up a formatted display area for text
+     *
+     * @param text the text to format
+     * @return the formatted text area
+     */
+    private static JTextArea formatArea(String text) {
+        // Create a JTextArea object for displaying formatted text
+        JTextArea area = new JTextArea();
+        // Set font, background color, foreground color, and text for the JTextArea
+        area.setFont(FONT);
+        area.setBackground(BACKGROUND);
+        area.setForeground(FOREGROUND);
+        area.setText(text);
+        return area;
+    }
+
+    /**
+     * Ask the user a yes or no question in a confirmation dialog box
+     *
+     * @param text the question to ask in the dialog
+     * @return true (yes), false (no)
+     */
+    private static boolean yesNo(String text) {
+        // Create a graphical display area with formatted text for the dialog
+        JTextArea area = formatArea(text);
+        // Display the dialog with options for "yes" and "no", and store the user's response
+        int response = JOptionPane.showConfirmDialog(null, area, TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+        return response == JOptionPane.YES_OPTION;
+    }
+
+    /**
+     * Ask the user if they want to play again, in a dialog box
+     *
+     * @return true (yes, play again), false (no)
+     */
+    private static boolean playAgain() {
+        // Prompt the user with a play again message and return their response
+        return yesNo("Do you want to play again?");
+    }
+
+    // Method to generate the number to be stored at each index
+    private static int generateNumber(int index) {
+        int sum = index;
+        while (index > 0) {
+            sum += index % 10;
+            index /= 10;
+        }
+        return sum;
+    }
+
+    // Method to fill the array with generated numbers
+    private static void fillArray(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            array[i] = generateNumber(i);
+        }
+    }
+
+    // Method to print the entire array
+    private static void printArray(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            int result = array[i];
+            String equation = "Index " + i + ": ";
+            // Construct the equation string
+            equation += i;
+            int temp = i;
+            while (temp > 0) {
+                equation += " + " + (temp % 10);
+                temp /= 10;
+            }
+            equation += " = " + result;
+            System.out.println(equation);
+        }
+    }
+
+    public static void main(String[] args) {
+        // Loop to restart the game if the user wants to play again
+        do {
+            start(); // Display welcome message
+            // Create an array with 100 elements
+            int[] indexArray = new int[100];
+            // Fill the array with generated numbers
+            fillArray(indexArray);
+            // Print the entire array
+            printArray(indexArray);
+            // Check if the user wants to play again
+        } while (playAgain()); // Repeat if the user wants to play again
+        end(); // End the program if the user doesn't want to play again
+    }
+}
